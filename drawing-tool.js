@@ -8,3 +8,5 @@ var svgDC = d3.select('#svg-dc')
   .attr('style', 'cursor:none;margin:20px;')
   .style('background', 'url("https://botb-club.com/wp-content/uploads/2022/03/dc1022.jpg.jpg") no-repeat')
   .style('background-size', 'cover');
+  
+console.log(svgDC);
