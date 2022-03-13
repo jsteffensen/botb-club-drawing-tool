@@ -1,3 +1,5 @@
+var isLoggedIn = document.body.classList.contains('logged-in');
+
 var playerEyesDC = [
   {'x': 1107, 'y': 1703
   },
@@ -17,8 +19,6 @@ var playerEyesMW = [
   {'x': 3066, 'y': 1512
   }
 ];
-
-var playerEyesMW = [];
 
 var imageWidth = 4416;
 var imageHeight = 3336;
@@ -115,7 +115,8 @@ playerEyesDC.forEach((e)=>{
 		.attr('x2', e.x * imageRatio)
 		.attr('y2', e.y * imageRatio)
 		.attr('stroke-width', '1px')
-		.attr('stroke', colorDC);
+		.attr('stroke', colorDC)
+		.attr('opacity', 0.75);
 });
 
 playerEyesMW.forEach((e)=>{
@@ -127,7 +128,8 @@ playerEyesMW.forEach((e)=>{
 		.attr('x2', e.x * imageRatio)
 		.attr('y2', e.y * imageRatio)
 		.attr('stroke-width', '1px')
-		.attr('stroke', colorMW);
+		.attr('stroke', colorMW)
+		.attr('opacity', 0.75);
 });
   
   
@@ -139,10 +141,24 @@ svgDC.on('mousemove', function(event, d) {
 		.attr('y2', event.layerY);
 });
 
+svgDC.on('click', function(event, d) {
+	if(isLoggedIn) {
+		jQuery('.dc-x input').val('' + (event.layerX / imageRatio));
+		jQuery('.dc-y input').val('' + (event.layerY / imageRatio));
+	}
+});
+
 svgMW.on('mousemove', function(event, d) {
 	xyLabelMW.text(Math.round(event.layerX / imageRatio) + ', ' + Math.round(event.layerY / imageRatio));
 	circularGradientMW.attr('cx', event.layerX).attr('cy', event.layerY);
 	linesMW.selectAll('line')
 		.attr('x2', event.layerX)
 		.attr('y2', event.layerY);
+});
+
+svgMW.on('click', function(event, d) {
+	if(isLoggedIn) {
+		jQuery('.mw-x input').val('' + (event.layerX / imageRatio));
+		jQuery('.mw-y input').val('' + (event.layerY / imageRatio));		
+	}
 });
