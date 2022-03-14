@@ -1,13 +1,17 @@
 var isLoggedIn = document.body.classList.contains('logged-in');
 
+jQuery.get( 'api/timestamp.php', function( data ) {
+  console.log(data);
+});
+
 var playerEyesDC = [
-  {'x': 1107, 'y': 1703
+  {'x': 2252, 'y': 2258
   },
-  {'x': 1278, 'y': 1689
+  {'x': 2170, 'y': 2254
   },
-  {'x': 3149, 'y': 1916
+  {'x': 2674, 'y': 2219
   },
-  {'x': 3307, 'y': 1987
+  {'x': 2767, 'y': 2219
   }
 ];
 
@@ -25,14 +29,14 @@ var imageHeight = 3336;
 var imageRatio = 0.2;
 
 var colorDC = 'white';
-var gradientSizeDC = 350;
+var gradientSizeDC = 230;
 var colorMW = 'white';
 var gradientSizeMW = 250;
 
 var svgDC = d3.select('#svg-dc')
   .attr('width', imageWidth * imageRatio)
   .attr('height', imageHeight * imageRatio)
-  .attr('style', 'cursor:none;margin:20px;background:url(\"https://botb-club.com/wp-content/uploads/2022/03/dc1022.jpg\") no-repeat;background-size:cover;');
+  .attr('style', 'cursor:none;margin:20px;background:url(\"https://botb-club.com/wp-content/uploads/2022/03/dc1122.jpg\") no-repeat;background-size:cover;');
   
 var svgMW = d3.select('#svg-mw')
   .attr('width', imageWidth * imageRatio)
@@ -116,7 +120,7 @@ playerEyesDC.forEach((e)=>{
 		.attr('y2', e.y * imageRatio)
 		.attr('stroke-width', '1px')
 		.attr('stroke', colorDC)
-		.attr('opacity', 0.75);
+		.attr('opacity', 0.6);
 });
 
 playerEyesMW.forEach((e)=>{
@@ -129,7 +133,7 @@ playerEyesMW.forEach((e)=>{
 		.attr('y2', e.y * imageRatio)
 		.attr('stroke-width', '1px')
 		.attr('stroke', colorMW)
-		.attr('opacity', 0.75);
+		.attr('opacity', 0.6);
 });
   
   
@@ -162,3 +166,4 @@ svgMW.on('click', function(event, d) {
 		jQuery('.mw-y input').val('' + (event.layerY / imageRatio));		
 	}
 });
+
