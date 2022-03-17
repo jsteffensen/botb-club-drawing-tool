@@ -33,48 +33,52 @@ $posts = [];
 
 if ($result->num_rows > 0) {
   
-  while($row = $result->fetch_assoc()) {
-	
-	$entryId = "key_" . $row["entry_id"];
-	
-	if(array_key_exists($entryId, $posts)) {
-		
+	// loop to merge all fields from a user post into one object
+	while($row = $result->fetch_assoc()) {
 		if($row["meta_key"] != "_forminator_user_ip") {
-			$obj = $posts[$entryId];
-			$key = $row["meta_key"];
-			$key = str_replace("-", "", $key);
-			$obj->{$key} = $row["meta_value"];
-			$posts[$entryId] = $obj;	
-		}
-		
-	} else {
-		if($row["meta_key"] != "_forminator_user_ip") {
-			$obj = new stdClass();
-			$key = $row["meta_key"];
-			$key = str_replace("-", "", $key);
-			$obj->time_created = $row["time_created"];
-			$obj->{$key} = $row["meta_value"];
-			$posts[$entryId] = $obj;	
-		}
-		
-	}
-	
-	if(isComplete($obj)) {
-		if($obj->hidden3 == "mw") {
-			unset($posts[$entryId]);
+
+			$entryId = "key_" . $row["entry_id"];
+			
+			if(array_key_exists($entryId, $posts)) {
+				$obj = $posts[$entryId];
+				$key = $row["meta_key"];
+				$key = str_replace("-", "", $key);
+				$obj->{$key} = $row["meta_value"];
+				$posts[$entryId] = $obj;	
+			} else {
+				$obj = new stdClass();
+				$key = $row["meta_key"];
+				$key = str_replace("-", "", $key);
+				$obj->time_created = $row["time_created"];
+				$obj->{$key} = $row["meta_value"];
+				$posts[$entryId] = $obj;	
+			}
+			
+			if(isComplete($obj)) {
+				if($obj->hidden3 == "mw") {
+					unset($posts[$entryId]);
+				}
+			}		
 		}
 	}
-	
-  }
-  
+
+	// loop to remove older posts
+	$filteredPosts = [];
+	foreach($posts as $k=>$v) {
+		$obj = $posts[$k];
+		$userKey = $obj->hidden1;
+		if(!array_key_exists($userKey, $filteredPosts)) {
+			$filteredPosts[$userKey] = $obj;
+		}
+	}
   
   
 	$index = 0;
 	echo "[";
-	foreach($posts as $k=>$v) {
-	  $json_data = json_encode((array) $posts[$k]);
+	foreach($filteredPosts as $k=>$v) {
+	  $json_data = json_encode((array) $filteredPosts[$k]);
 	  print_r($json_data);
-	  if(++$index != count($posts)) {
+	  if(++$index != count($filteredPosts)) {
 		echo ", ";
 	  }
 	}
