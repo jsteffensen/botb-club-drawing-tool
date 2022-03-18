@@ -1,5 +1,4 @@
 <?php
-require_once('pseudocrypt.php');
 
 function isComplete($obj) {
 	$hasT = property_exists($obj, "time_created");
@@ -58,46 +57,35 @@ if ($result->num_rows > 0) {
 			if(isComplete($obj)) {
 				if($obj->hidden3 == "mw") {
 					unset($posts[$entryId]);
-				} else {
-					$obj->userhash = PseudoCrypt::hash($obj->hidden1, 6);
-					$obj->x = $obj->number1;
-					$obj->y = $obj->number2;
-					unset($obj->number1);
-					unset($obj->number2);
-					unset($obj->hidden1);
-					unset($obj->hidden2);
-					unset($obj->hidden3);
-					$posts[$entryId] = $obj;
 				}
 			}		
 		}
 	}
 
-	// loop to remove older posts
+	// loop to remove older posts by same user and build avg data object
 	$filteredPosts = [];
+	$result = new stdClass();
+	$xSum = 0;
+	$ySum = 0;
 	foreach($posts as $k=>$v) {
 		$obj = $posts[$k];
 		$userKey = $obj->hidden1;
 		if(!array_key_exists($userKey, $filteredPosts)) {
+			$xSum += $obj->number1;
+			$ySum += $obj->number2;
 			$filteredPosts[$userKey] = $obj;
 		}
 	}
+	$result->xavg = round($xSum/count($filteredPosts));
+	$result->yavg = round($ySum/count($filteredPosts));
+	$result->count = count($filteredPosts);
   
   
-	$index = 0;
-	echo "[";
-	foreach($filteredPosts as $k=>$v) {
-	  $json_data = json_encode((array) $filteredPosts[$k]);
-	  print_r($json_data);
-	  if(++$index != count($filteredPosts)) {
-		echo ", ";
-	  }
-	}
-	echo "]";
-  
+	$json_data = json_encode($result);
+	print_r($json_data);
   
 } else {
-  echo "[]";
+  echo "{}";
 }
 $conn->close();
 ?>
