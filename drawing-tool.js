@@ -1,3 +1,4 @@
+<script>
 var isLoggedIn = document.body.classList.contains('logged-in');
 
 jQuery.get( 'api/timestamp.php', function( data ) {
@@ -166,4 +167,4 @@ svgMW.on('click', function(event, d) {
 		jQuery('.mw-y input').val('' + (event.layerY / imageRatio));		
 	}
 });
-
+</script>
