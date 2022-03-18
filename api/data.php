@@ -90,6 +90,7 @@ if ($result->num_rows > 0) {
 		}
 	}
 
+	//prepare average
 	$dcSumX = 0;
 	$dcSumY = 0;
 	$mwSumX = 0;
@@ -123,6 +124,7 @@ if ($result->num_rows > 0) {
 		}
 	}
   
+    //build result
     $result = new stdClass();
 	
 	$dcResult = new stdClass();

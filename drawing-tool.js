@@ -1,9 +1,20 @@
 <script>
+var data;
 var isLoggedIn = document.body.classList.contains('logged-in');
 
-jQuery.get( 'api/timestamp.php', function( data ) {
-  console.log(data);
+jQuery.get( 'api/data.php', function( data ) {
+  data = data;
+  assignShowAvg();
 });
+
+function assignShowAvg() {
+  jQuery('#dc-container span').click(function() {
+    console.log('clicked dc show avg');
+  });
+  jQuery('#mw-container span').click(function() {
+    console.log('clicked mw show avg');
+  });
+}
 
 var playerEyesDC = [
   {'x': 2252, 'y': 2258
