@@ -2,17 +2,39 @@
 var data;
 var isLoggedIn = document.body.classList.contains('logged-in');
 
-jQuery.get( 'api/data.php', function( data ) {
-  data = data;
+jQuery.getJSON( 'api/data.php', function( avgdata ) {
+  data = avgdata;
   assignShowAvg();
 });
 
 function assignShowAvg() {
   jQuery('#dc-container span').click(function() {
-    console.log('clicked dc show avg');
+
+	jQuery.getJSON( 'api/data.php', function( avgdata ) {
+		data = avgdata;
+
+		avgLabelDC.text( data.dc.avgx + ', ' + data.dc.avgy + ' (' + data.dc.count + ')' );
+		xyLabelDC.text( data.dc.avgx + ', ' + data.dc.avgy );
+		circularGradientDC.attr('cx', data.dc.avgx * imageRatio).attr('cy', data.dc.avgy * imageRatio);
+		linesDC.selectAll('line')
+			.attr('x2', data.dc.avgx * imageRatio)
+			.attr('y2', data.dc.avgy * imageRatio);
+	});
+	  
   });
+  
   jQuery('#mw-container span').click(function() {
-    console.log('clicked mw show avg');
+	
+	jQuery.getJSON( 'api/data.php', function( avgdata ) {
+		data = avgdata;
+		
+		avgLabelMW.text( data.mw.avgx + ', ' + data.mw.avgy + ' (' + data.mw.count + ')' );
+		xyLabelMW.text( data.mw.avgx + ', ' + data.mw.avgy );
+		circularGradientMW.attr('cx', data.mw.avgx * imageRatio).attr('cy', data.mw.avgy * imageRatio);
+		linesMW.selectAll('line')
+			.attr('x2', data.mw.avgx * imageRatio)
+			.attr('y2', data.mw.avgy * imageRatio);
+	});
   });
 }
 
@@ -64,6 +86,15 @@ var xyLabelDC = svgDC.append('text')
   .style('font-family', 'monospace')
   .style('font-size', 16);
   
+var avgLabelDC = svgDC.append('text')
+  .attr('class', 'xyLabel')
+  .attr('fill', colorDC)
+  .attr('stroke', 'white')
+  .attr('x', 20)
+  .attr('y', 20)
+  .style('font-family', 'monospace')
+  .style('font-size', 16);
+  
 var xyLabelMW = svgMW.append('text')
   .attr('class', 'xyLabel')
   .attr('fill', colorDC)
@@ -72,7 +103,15 @@ var xyLabelMW = svgMW.append('text')
   .attr('y', 20)
   .style('font-family', 'monospace')
   .style('font-size', 16);
-  
+
+var avgLabelMW = svgMW.append('text')
+  .attr('class', 'xyLabel')
+  .attr('fill', colorDC)
+  .attr('stroke', 'white')
+  .attr('x', 20)
+  .attr('y', 20)
+  .style('font-family', 'monospace')
+  .style('font-size', 16);
   
 var circularGradientDefDC = svgDC.append('defs').append('radialGradient')
 	.attr('id', 'circularGradientDC')
@@ -95,7 +134,6 @@ var circularGradientDC = svgDC.append('circle')
 	.attr('cx', 0)
 	.attr('cy', 0)
 	.attr('fill', 'url(#circularGradientDC)');
-
 
 var circularGradientDefMW = svgMW.append('defs').append('radialGradient')
 	.attr('id', 'circularGradientMW')

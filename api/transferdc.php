@@ -91,14 +91,21 @@ if ($result->num_rows > 0) {
 		}
 	}
 	
-	if(count()>0) {
-		
-	}
+	$competition = "dc" . date("W") . date("y");
+	$isql = "INSERT INTO user_results (userId, x, y, competition) VALUES ";
+	$index = 0;
+	
 	foreach($resultPosts as $k=>$v) {
+		if(++$index < count($resultPosts)) {
+			$sep = ",";
+		} else {
+			$sep = "";
+		}
 		$obj = $resultPosts[$k];
-		echo "user=" . $obj->user . ", x=" . $obj->x . ", y=" . $obj->y . ", dist=null";
+		$isql = $isql . "(" . $obj->user . ", " . $obj->x . ", " . $obj->y . ", \"" . $competition . "\")" . $sep;
 	}
   
+    echo $isql . ";";
 }
 $conn->close();
 ?>
